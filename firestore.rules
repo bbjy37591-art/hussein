@@ -1,0 +1,165 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net: Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    function isValidTask(data) {
+      return data.keys().hasAll([
+        'id',
+        'ownerId',
+        'title',
+        'notes',
+        'completed',
+        'priority',
+        'category',
+        'timeBlock',
+        'scheduledTime',
+        'dueDate',
+        'estimatedMinutes',
+        'actualMinutesFocused',
+        'starred',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'id',
+        'ownerId',
+        'title',
+        'notes',
+        'completed',
+        'priority',
+        'category',
+        'timeBlock',
+        'scheduledTime',
+        'dueDate',
+        'estimatedMinutes',
+        'actualMinutesFocused',
+        'starred',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      isValidId(data.id) &&
+      isValidId(data.ownerId) &&
+      data.ownerId == request.auth.uid &&
+      data.title is string && data.title.size() >= 1 && data.title.size() <= 300 &&
+      data.notes is string && data.notes.size() <= 2000 &&
+      data.completed is bool &&
+      data.priority is string && data.priority.size() <= 20 && data.priority in ['urgent', 'high', 'medium', 'low'] &&
+      data.category is string && data.category.size() <= 20 && data.category in ['work', 'personal', 'health', 'learning'] &&
+      data.timeBlock is string && data.timeBlock.size() <= 20 && data.timeBlock in ['morning', 'afternoon', 'evening'] &&
+      data.scheduledTime is string && data.scheduledTime.size() <= 10 &&
+      data.dueDate is string && data.dueDate.size() <= 16 &&
+      data.estimatedMinutes is number && data.estimatedMinutes >= 1 && data.estimatedMinutes <= 480 &&
+      data.actualMinutesFocused is number && data.actualMinutesFocused >= 0 && data.actualMinutesFocused <= 10000 &&
+      data.starred is bool &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidHundredDaysBoard(data) {
+      return data.keys().hasAll([
+        'ownerId',
+        'completedDays',
+        'habitTitles',
+        'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'ownerId',
+        'completedDays',
+        'habitTitles',
+        'updatedAt'
+      ]) &&
+      isValidId(data.ownerId) &&
+      data.ownerId == request.auth.uid &&
+      data.completedDays is list && data.completedDays.size() <= 100 &&
+      (data.completedDays.size() == 0 || data.completedDays[0] is number) &&
+      data.habitTitles is list && data.habitTitles.size() <= 20 &&
+      (data.habitTitles.size() == 0 || (data.habitTitles[0] is string && data.habitTitles[0].size() <= 200)) &&
+      data.updatedAt is timestamp;
+    }
+
+    match /tasks/{taskId} {
+      allow get: if isSignedIn() && isValidId(taskId) && existing().ownerId == request.auth.uid;
+      allow list: if isSignedIn() && existing().ownerId == request.auth.uid;
+
+      allow create: if isSignedIn() &&
+        isValidId(taskId) &&
+        isValidTask(incoming()) &&
+        incoming().id == taskId &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+
+      allow update: if isSignedIn() &&
+        isValidId(taskId) &&
+        isValidTask(incoming()) &&
+        existing().ownerId == request.auth.uid &&
+        incoming().id == existing().id &&
+        incoming().ownerId == existing().ownerId &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        (
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'title',
+            'notes',
+            'completed',
+            'priority',
+            'category',
+            'timeBlock',
+            'scheduledTime',
+            'dueDate',
+            'estimatedMinutes',
+            'actualMinutesFocused',
+            'starred',
+            'updatedAt'
+          ])
+        );
+
+      allow delete: if isSignedIn() && isValidId(taskId) && existing().ownerId == request.auth.uid;
+    }
+
+    match /hundredDaysBoards/{boardId} {
+      allow get: if isSignedIn() && isValidId(boardId) && boardId == request.auth.uid && existing().ownerId == request.auth.uid;
+
+      allow create: if isSignedIn() &&
+        isValidId(boardId) &&
+        boardId == request.auth.uid &&
+        isValidHundredDaysBoard(incoming()) &&
+        incoming().updatedAt == request.time;
+
+      allow update: if isSignedIn() &&
+        isValidId(boardId) &&
+        boardId == request.auth.uid &&
+        isValidHundredDaysBoard(incoming()) &&
+        existing().ownerId == request.auth.uid &&
+        incoming().ownerId == existing().ownerId &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'completedDays',
+          'habitTitles',
+          'updatedAt'
+        ]);
+
+      allow delete: if isSignedIn() && isValidId(boardId) && boardId == request.auth.uid && existing().ownerId == request.auth.uid;
+    }
+  }
+}

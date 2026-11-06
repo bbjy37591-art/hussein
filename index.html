@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ar" dir="rtl" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      (function () {
+        var NativeWS = window.WebSocket;
+        if (!NativeWS) return;
+        function PatchedWebSocket(url, protocols) {
+          if (protocols === 'vite-hmr' || protocols === 'vite-ping') {
+            var target = new EventTarget();
+            target.OPEN = 1;
+            target.readyState = 1;
+            target.url = String(url || '');
+            target.protocol = String(protocols || '');
+            target.send = function () {};
+            target.close = function () {};
+            return target;
+          }
+          return arguments.length > 1
+            ? new NativeWS(url, protocols)
+            : new NativeWS(url);
+        }
+        PatchedWebSocket.prototype = NativeWS.prototype;
+        PatchedWebSocket.CONNECTING = NativeWS.CONNECTING;
+        PatchedWebSocket.OPEN = NativeWS.OPEN;
+        PatchedWebSocket.CLOSING = NativeWS.CLOSING;
+        PatchedWebSocket.CLOSED = NativeWS.CLOSED;
+        window.WebSocket = PatchedWebSocket;
+        document.addEventListener(
+          'wheel',
+          function (e) {
+            if (e.ctrlKey) e.preventDefault();
+          },
+          { passive: false }
+        );
+        document.addEventListener('gesturestart', function (e) {
+          e.preventDefault();
+        });
+        document.addEventListener('gesturechange', function (e) {
+          e.preventDefault();
+        });
+      })();
+    </script>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#07080B" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="مهام المهندس حسين علاء" />
+    <title>مهام المهندس حسين علاء — الإدارة الملكية للمهام اليومية</title>
+    <meta
+      name="description"
+      content="تطبيق مهام المهندس حسين علاء الاحترافي لإدارة المهام اليومية، جدول التحديات، وجلسات التركيز العميق بالمزامنة الفورية مع سحابة جوجل وخوادم VPS."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="مهام المهندس حسين علاء" />
+    <meta property="og:locale" content="ar_AR" />
+    <meta property="og:title" content="مهام المهندس حسين علاء — الإدارة الملكية للمهام اليومية" />
+    <meta
+      property="og:description"
+      content="نظم أولوياتك اليومية، تتبع جدول التحديات، وفعّل وضع التركيز العميق بالمزامنة السحابية الموحدة عبر جميع المنصات."
+    />
+    <meta property="og:image" content="/pwa-512x512.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="مهام المهندس حسين علاء — الإدارة الملكية للمهام اليومية" />
+    <meta
+      name="twitter:description"
+      content="نظم أولوياتك اليومية، تتبع جدول التحديات، وفعّل وضع التركيز العميق بالمزامنة السحابية الموحدة عبر جميع المنصات."
+    />
+    <meta name="twitter:image" content="/pwa-512x512.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alexandria:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "مهام المهندس حسين علاء",
+        "alternateName": "Eng Hussein Alaa Tasks",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Android, iOS, Windows, macOS, Web",
+        "inLanguage": "ar",
+        "description": "تطبيق احترافي لإدارة المهام اليومية وجدول التحديات وجلسات التركيز العميق بالمزامنة السحابية الفورية مع سحابة جوجل وخادم VPS.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
+  </head>
+  <body class="bg-[#07080B] text-zinc-100 antialiased selection:bg-amber-400/25 selection:text-amber-300">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

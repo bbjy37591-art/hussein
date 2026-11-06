@@ -1,0 +1,130 @@
+{
+  "entities": {
+    "Task": {
+      "title": "Task",
+      "description": "A daily task item owned by Hussein Alaa in the cloud workspace.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique task identifier",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "description": "Authenticated user UID who owns this task",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "description": "Task title",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "notes": {
+          "type": "string",
+          "description": "Task notes and details",
+          "maxLength": 2000
+        },
+        "completed": {
+          "type": "boolean",
+          "description": "Whether the task is completed"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["urgent", "high", "medium", "low"],
+          "maxLength": 20
+        },
+        "category": {
+          "type": "string",
+          "enum": ["work", "personal", "health", "learning"],
+          "maxLength": 20
+        },
+        "timeBlock": {
+          "type": "string",
+          "enum": ["morning", "afternoon", "evening"],
+          "maxLength": 20
+        },
+        "scheduledTime": {
+          "type": "string",
+          "maxLength": 10
+        },
+        "dueDate": {
+          "type": "string",
+          "maxLength": 16
+        },
+        "estimatedMinutes": {
+          "type": "number"
+        },
+        "actualMinutesFocused": {
+          "type": "number"
+        },
+        "starred": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "title",
+        "notes",
+        "completed",
+        "priority",
+        "category",
+        "timeBlock",
+        "scheduledTime",
+        "dueDate",
+        "estimatedMinutes",
+        "actualMinutesFocused",
+        "starred",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "HundredDaysBoard": {
+      "title": "HundredDaysBoard",
+      "description": "100-Day challenge state and completed days array for the user.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "completedDays": {
+          "type": "array",
+          "description": "List of completed day numbers (1..100), max 100 items"
+        },
+        "habitTitles": {
+          "type": "array",
+          "description": "List of required daily habit titles, max 20 items"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["ownerId", "completedDays", "habitTitles", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/Task" },
+      "description": "User tasks synced in real-time across devices"
+    },
+    "/hundredDaysBoards/{boardId}": {
+      "schema": { "$ref": "#/entities/HundredDaysBoard" },
+      "description": "100-Day challenge board state per user"
+    }
+  }
+}

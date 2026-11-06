@@ -1,0 +1,14 @@
+{
+  "appId": "app.husseinalaa.tasks",
+  "appName": "مهام حسين علاء",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://ais-pre-lzrbk7wkh6ivcaiwsuh4ac-734066117935.europe-west2.run.app",
+    "cleartext": false
+  },
+  "android": {
+    "backgroundColor": "#07080B",
+    "allowMixedContent": false
+  }
+}

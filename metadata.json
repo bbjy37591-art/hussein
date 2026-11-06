@@ -1,0 +1,6 @@
+{
+  "name": "مِنجَز — إدارة المهام اليومية",
+  "description": "تطبيق احترافي لإدارة المهام اليومية وتنظيم الوقت والتركيز بواجهة عربية عصرية وبسيطة.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
