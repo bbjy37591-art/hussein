@@ -6,6 +6,7 @@ import {
   RotateCcw,
   Search,
   ShieldAlert,
+  SlidersHorizontal,
   Trash2,
   X,
 } from 'lucide-react';
@@ -57,6 +58,7 @@ import {
 } from './utils/taskLogic';
 import { playChallengeNotificationTone } from './utils/soundTones';
 import { TopBar, WorkspaceTab } from './components/TopBar';
+import { BottomTabBar } from './components/BottomTabBar';
 import { Sidebar } from './components/Sidebar';
 import { QuickAddTaskBar } from './components/QuickAddTaskBar';
 import { TaskRow } from './components/TaskRow';
@@ -174,6 +176,7 @@ export default function App() {
     priority: 'all',
     sortBy: 'priority',
   });
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
 
   const [focusTaskId, setFocusTaskId] = useState<string | null>(
     INITIAL_TASKS[0]?.id ?? null
@@ -887,34 +890,62 @@ export default function App() {
     filters.priority !== 'all';
 
   return (
-    <div
-      id="top"
-      className="min-h-dvh w-full flex flex-col select-none bg-[#FAF8F5] dark:bg-[#07080B] text-zinc-900 dark:text-zinc-100"
-    >
-      {/* Top Bar with all Workspace Pages */}
-      <TopBar
-        activeTab={activeTab}
-        onSelectTab={handleSelectWorkspaceTab}
-        onOpenNewTaskModal={() => handleOpenNewModal('morning', TODAY_DATE_STR)}
-      />
+    <div className="min-h-dvh w-full bg-[#101116] dark:bg-[#030305] sm:py-5 sm:px-3 flex items-center justify-center">
+      {/* Smartphone Frame Outer Container */}
+      <div
+        id="top"
+        className="w-full sm:max-w-[480px] md:max-w-[500px] min-h-dvh sm:min-h-[880px] sm:max-h-[94vh] sm:rounded-[40px] sm:border-[8px] sm:border-zinc-800 dark:sm:border-zinc-800/90 sm:shadow-[0_25px_70px_rgba(0,0,0,0.85)] bg-[#FAF8F5] dark:bg-[#07080B] text-zinc-900 dark:text-zinc-100 flex flex-col relative overflow-hidden overflow-y-auto no-scrollbar"
+      >
+        {/* Smartphone Dynamic Island Notch on Desktop */}
+        <div className="hidden sm:flex items-center justify-center pt-2.5 pb-1 shrink-0 z-40 bg-[#FAF8F5] dark:bg-[#08090C]">
+          <div className="w-28 h-3.5 rounded-full bg-zinc-900/95 dark:bg-zinc-800/95 border border-amber-500/20 flex items-center justify-between px-3 shadow-xs">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <div className="w-8 h-1 rounded-full bg-zinc-700 dark:bg-zinc-600" />
+            <div className="w-1.5 h-1.5 rounded-full bg-amber-400/80" />
+          </div>
+        </div>
 
-      {/* Unified App Shell: Smoothly Scrollable Main Viewport + Sidebar */}
-      <div className="flex-1 flex flex-col lg:flex-row max-w-[1440px] w-full mx-auto">
-        {activeTab !== 'hundred' && (
-          <Sidebar
-            filters={filters}
-            metrics={metrics}
-            hundredCompletedCount={hundredState.completedDays.length}
-            hundredTotalDays={hundredState.totalDays ?? 100}
-            activeTab={activeTab}
-            isDark={isDark}
-            onUpdateFilter={handleUpdateFilter}
-            onSelectTab={handleSelectWorkspaceTab}
-            onToggleTheme={() => setIsDark((prev) => !prev)}
-          />
+        {/* Top Bar with Brand Wordmark, Filters Drawer button, Theme Toggle & Action */}
+        <TopBar
+          activeTab={activeTab}
+          isDark={isDark}
+          onToggleTheme={() => setIsDark((prev) => !prev)}
+          onOpenFiltersDrawer={() => setIsFilterDrawerOpen(true)}
+          onSelectTab={handleSelectWorkspaceTab}
+          onOpenNewTaskModal={() => handleOpenNewModal('morning', TODAY_DATE_STR)}
+        />
+
+        {/* Mobile Slide-Up Filters Drawer Overlay */}
+        {isFilterDrawerOpen && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="قائمة تصنيفات وفلاتر المهام"
+            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/75 backdrop-blur-xs p-0 sm:p-4 animate-in fade-in duration-200"
+            onClick={() => setIsFilterDrawerOpen(false)}
+          >
+            <div
+              className="w-full max-w-md bg-white dark:bg-[#0B0C10] rounded-t-3xl sm:rounded-3xl border border-zinc-200 dark:border-amber-500/35 max-h-[85vh] overflow-y-auto no-scrollbar shadow-2xl p-4 sm:p-5"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Sidebar
+                filters={filters}
+                metrics={metrics}
+                hundredCompletedCount={hundredState.completedDays.length}
+                hundredTotalDays={hundredState.totalDays ?? 100}
+                activeTab={activeTab}
+                isDark={isDark}
+                onClose={() => setIsFilterDrawerOpen(false)}
+                onUpdateFilter={handleUpdateFilter}
+                onSelectTab={handleSelectWorkspaceTab}
+                onToggleTheme={() => setIsDark((prev) => !prev)}
+              />
+            </div>
+          </div>
         )}
 
-        <main className="order-2 flex-1 min-w-0 p-4 sm:p-6 space-y-6">
+        {/* Main Phone Viewport */}
+        <main className="flex-1 min-w-0 p-3.5 sm:p-4 space-y-5 pb-20">
           {activeTab === 'hundred' ? (
             <HundredDaysView
               state={hundredState}
@@ -999,6 +1030,38 @@ export default function App() {
                         </>
                       )}
                     </div>
+                  </div>
+
+                  {/* Quick Filters Pill & Categories Drawer Trigger */}
+                  <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+                    <button
+                      type="button"
+                      onClick={() => setIsFilterDrawerOpen(true)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 border border-amber-500/35 cursor-pointer shrink-0 whitespace-nowrap shadow-xs"
+                    >
+                      <SlidersHorizontal className="w-3.5 h-3.5 shrink-0 text-amber-500" aria-hidden="true" />
+                      <span>تصنيفات وفلاتر المهام</span>
+                    </button>
+                    {filters.category !== 'all' && (
+                      <button
+                        type="button"
+                        onClick={() => handleUpdateFilter({ category: 'all' })}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-amber-600 dark:text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-xl cursor-pointer shrink-0 whitespace-nowrap"
+                      >
+                        <span>التصنيف: {CATEGORY_LABELS[filters.category]}</span>
+                        <X className="w-3 h-3 shrink-0" aria-hidden="true" />
+                      </button>
+                    )}
+                    {filters.timeBlock !== 'all' && (
+                      <button
+                        type="button"
+                        onClick={() => handleUpdateFilter({ timeBlock: 'all' })}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-amber-600 dark:text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-xl cursor-pointer shrink-0 whitespace-nowrap"
+                      >
+                        <span>الفترة: {TIME_BLOCK_LABELS[filters.timeBlock].title}</span>
+                        <X className="w-3 h-3 shrink-0" aria-hidden="true" />
+                      </button>
+                    )}
                   </div>
 
                   {/* Quick Inline Task Creation Bar with Custom Category & Unique Icon Color */}
@@ -1276,6 +1339,15 @@ export default function App() {
             </>
           )}
         </main>
+
+        {/* Smartphone Bottom Tab Navigation Bar */}
+        <BottomTabBar
+          activeTab={activeTab}
+          pendingTasksCount={metrics.pendingCount}
+          hundredCompletedCount={hundredState.completedDays.length}
+          hundredTotalDays={hundredState.totalDays ?? 100}
+          onSelectTab={handleSelectWorkspaceTab}
+        />
       </div>
 
       {/* Task Creation & Editing Modal */}

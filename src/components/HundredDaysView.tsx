@@ -110,22 +110,23 @@ export function renderChallengeCheckIcon(
   iconType: ChallengeCheckIcon,
   className = 'w-3.5 h-3.5'
 ): React.ReactNode {
+  const finalClass = `${className} shrink-0`;
   switch (iconType) {
     case 'crown':
-      return <Crown className={className} aria-hidden="true" />;
+      return <Crown className={finalClass} aria-hidden="true" />;
     case 'star':
-      return <Star className={`${className} fill-current`} aria-hidden="true" />;
+      return <Star className={`${finalClass} fill-current`} aria-hidden="true" />;
     case 'flame':
-      return <Flame className={`${className} fill-current`} aria-hidden="true" />;
+      return <Flame className={`${finalClass} fill-current`} aria-hidden="true" />;
     case 'gem':
-      return <Gem className={className} aria-hidden="true" />;
+      return <Gem className={finalClass} aria-hidden="true" />;
     case 'trophy':
-      return <Trophy className={className} aria-hidden="true" />;
+      return <Trophy className={finalClass} aria-hidden="true" />;
     case 'shield':
-      return <ShieldCheck className={className} aria-hidden="true" />;
+      return <ShieldCheck className={finalClass} aria-hidden="true" />;
     case 'check':
     default:
-      return <Check className={`${className} stroke-[3]`} aria-hidden="true" />;
+      return <Check className={`${finalClass} stroke-[3]`} aria-hidden="true" />;
   }
 }
 
@@ -581,46 +582,46 @@ export const HundredDaysView: React.FC<HundredDaysViewProps> = ({
         {/* Directory Header Banner */}
         <section
           aria-label="القائمة الخاصة بجداول التحدي المنفصلة"
-          className="bg-white dark:bg-[#111217] border border-zinc-200 dark:border-amber-500/40 rounded-2xl p-6 space-y-6 shadow-lg"
+          className="bg-white dark:bg-[#111217] border border-zinc-200 dark:border-amber-500/40 rounded-2xl p-4 sm:p-6 space-y-4 sm:space-y-6 shadow-lg"
         >
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800 pb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl royal-gold-btn flex items-center justify-center shrink-0">
-                <ListChecks className="w-6 h-6" aria-hidden="true" />
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800 pb-4">
+            <div className="flex items-start sm:items-center gap-3 min-w-0">
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl royal-gold-btn flex items-center justify-center shrink-0 shadow-xs">
+                <ListChecks className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" aria-hidden="true" />
               </div>
-              <div>
-                <span className="text-xs font-semibold text-amber-600 dark:text-amber-400">
+              <div className="min-w-0 flex-1">
+                <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-400 block truncate">
                   نظام التحديات المستقل · منعزل تماماً عن المهام اليومية
                 </span>
-                <h1 className="text-xl sm:text-2xl font-bold font-display royal-gold-text">
-                  القائمة الخاصة بجداول التحدي ({challengesList.length} جداول منفصلة)
+                <h1 className="text-base sm:text-2xl font-bold font-display royal-gold-text leading-tight">
+                  القائمة الخاصة بجداول التحدي ({challengesList.length} جداول)
                 </h1>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 line-clamp-2 sm:line-clamp-none">
                   اختر أي جدول تحدٍّ لفتحه، أو اضبط ساعة التذكير اليومي، أو افتح جدولاً جديداً مع تحديد الأهداف العامة أو الخاصة.
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto shrink-0">
               <button
                 type="button"
                 onClick={() => {
                   setIsUnlocked(false);
                   setPasscodeInput('');
                 }}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl bg-zinc-100 dark:bg-[#14161D] text-zinc-800 dark:text-amber-300 border border-amber-500/35 hover:border-amber-400 transition-colors cursor-pointer"
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl bg-zinc-100 dark:bg-[#14161D] text-zinc-800 dark:text-amber-300 border border-amber-500/35 hover:border-amber-400 transition-colors cursor-pointer text-center whitespace-nowrap"
               >
-                <Lock className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
-                <span>تسجيل خروج / قفل القائمة</span>
+                <Lock className="w-3.5 h-3.5 text-amber-400 shrink-0" aria-hidden="true" />
+                <span>قفل القائمة</span>
               </button>
               {onBackToTasks && (
                 <button
                   type="button"
                   onClick={onBackToTasks}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 hover:border-amber-400 transition-colors cursor-pointer"
+                  className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 hover:border-amber-400 transition-colors cursor-pointer text-center whitespace-nowrap"
                 >
-                  <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                  <span>العودة لصفحة المهام</span>
+                  <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                  <span>المهام</span>
                 </button>
               )}
             </div>
@@ -629,18 +630,18 @@ export const HundredDaysView: React.FC<HundredDaysViewProps> = ({
           {/* DAILY REMINDER TIME SETTING IN CHALLENGES MENU (إعداد ساعة التذكير اليومي لجدول التحدي المختار) */}
           <div
             aria-label="إعداد ساعة الإشعارات اليومية لجدول التحدي المختار"
-            className="p-4 rounded-xl bg-gradient-to-l from-amber-500/10 via-[#0D0E13] to-[#0A0B0F] border border-amber-500/35 space-y-3"
+            className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-l from-amber-500/10 via-[#0D0E13] to-[#0A0B0F] border border-amber-500/35 space-y-3.5"
           >
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
-                  <Bell className="w-4 h-4" aria-hidden="true" />
+            <div className="space-y-3">
+              <div className="flex items-start sm:items-center gap-2.5">
+                <div className="w-9 h-9 rounded-lg bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 mt-0.5 sm:mt-0">
+                  <Bell className="w-4 h-4 shrink-0" aria-hidden="true" />
                 </div>
-                <div>
-                  <h2 className="text-sm font-bold text-zinc-900 dark:text-amber-200 font-display">
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-amber-200 font-display leading-tight">
                     إعداد إشعارات التذكير اليومي لجدول التحدي المختار
                   </h2>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">
                     حدد الساعة التي تصل فيها إشعارات يومية لتذكيرك بالالتزام بـ:{' '}
                     <strong className="text-amber-500 dark:text-amber-300">
                       {challengeTitle}
@@ -649,7 +650,8 @@ export const HundredDaysView: React.FC<HundredDaysViewProps> = ({
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2.5">
+              {/* Challenge Selector Dropdown - Clean Full Width & Never Overflowing */}
+              <div className="flex flex-col gap-1 w-full">
                 <label
                   htmlFor="directory-challenge-select-reminder"
                   className="text-xs font-semibold text-zinc-600 dark:text-zinc-300"
@@ -660,7 +662,7 @@ export const HundredDaysView: React.FC<HundredDaysViewProps> = ({
                   id="directory-challenge-select-reminder"
                   value={activeChallengeId}
                   onChange={(e) => onSelectSeparateChallenge?.(e.target.value)}
-                  className="px-3 py-1.5 text-xs font-bold bg-white dark:bg-[#121318] text-amber-600 dark:text-amber-300 border border-amber-500/35 rounded-lg cursor-pointer"
+                  className="w-full max-w-full px-3 py-2 text-xs font-bold bg-white dark:bg-[#121318] text-amber-600 dark:text-amber-300 border border-amber-500/35 rounded-xl cursor-pointer truncate"
                 >
                   {challengesList.map((c, i) => (
                     <option key={c.id} value={c.id}>
@@ -671,13 +673,14 @@ export const HundredDaysView: React.FC<HundredDaysViewProps> = ({
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-zinc-200/60 dark:border-zinc-800/80">
-              <div className="flex flex-wrap items-center gap-3">
+            {/* Time Controls */}
+            <div className="pt-2 border-t border-zinc-200/60 dark:border-zinc-800/80 space-y-2.5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                 <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-amber-400" aria-hidden="true" />
+                  <Clock className="w-4 h-4 text-amber-400 shrink-0" aria-hidden="true" />
                   <label
                     htmlFor="challenge-reminder-time-input"
-                    className="text-xs font-semibold text-zinc-700 dark:text-amber-200"
+                    className="text-xs font-semibold text-zinc-700 dark:text-amber-200 whitespace-nowrap"
                   >
                     ساعة الإشعار اليومي:
                   </label>
@@ -688,7 +691,7 @@ export const HundredDaysView: React.FC<HundredDaysViewProps> = ({
                     onChange={(e) =>
                       onUpdateChallengeConfig?.({ reminderTime: e.target.value })
                     }
-                    className="px-3 py-1.5 text-xs font-mono font-bold bg-white dark:bg-[#121318] text-amber-600 dark:text-amber-300 border border-amber-500/40 rounded-lg focus:outline-none focus:border-amber-400"
+                    className="px-2.5 py-1.5 text-xs font-mono font-bold bg-white dark:bg-[#121318] text-amber-600 dark:text-amber-300 border border-amber-500/40 rounded-lg focus:outline-none focus:border-amber-400"
                   />
                 </div>
 
@@ -703,7 +706,7 @@ export const HundredDaysView: React.FC<HundredDaysViewProps> = ({
                           reminderEnabled: true,
                         })
                       }
-                      className={`px-2.5 py-1 text-[11px] font-mono rounded-md border transition-all cursor-pointer ${
+                      className={`px-2 py-1 text-[11px] font-mono rounded-md border transition-all cursor-pointer ${
                         reminderTime === preset.value
                           ? 'royal-gold-btn border-amber-400 font-bold'
                           : 'bg-white dark:bg-[#121318] border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:border-amber-400'
@@ -715,7 +718,7 @@ export const HundredDaysView: React.FC<HundredDaysViewProps> = ({
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
                 <button
                   type="button"
                   onClick={() =>
@@ -723,7 +726,7 @@ export const HundredDaysView: React.FC<HundredDaysViewProps> = ({
                       reminderEnabled: !reminderEnabled,
                     })
                   }
-                  className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
+                  className={`w-full py-2 px-3 text-xs font-bold rounded-xl border transition-all cursor-pointer text-center ${
                     reminderEnabled
                       ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400'
                       : 'bg-zinc-200 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-800 text-zinc-500'
@@ -737,24 +740,27 @@ export const HundredDaysView: React.FC<HundredDaysViewProps> = ({
                 <button
                   type="button"
                   onClick={handleTestOrEnableReminder}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-lg royal-gold-btn transition-all cursor-pointer"
+                  className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-bold rounded-xl royal-gold-btn transition-all cursor-pointer text-center shadow-xs"
                 >
-                  <BellRing className="w-3.5 h-3.5" aria-hidden="true" />
+                  <BellRing className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   <span>تفعيل وتجربة الإشعار الآن</span>
                 </button>
               </div>
             </div>
 
-            {/* Challenge Distinct Notification Tone Selector (اختيار نغمة إشعار مخصصة لهذا التحدي) */}
-            <div className="pt-3 border-t border-zinc-200/60 dark:border-zinc-800/80 flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap items-center gap-2.5 flex-1">
+            {/* Challenge Distinct Notification Tone Selector */}
+            <div className="pt-2.5 border-t border-zinc-200/60 dark:border-zinc-800/80 space-y-2">
+              <div className="flex items-center gap-2">
                 <Volume2 className="w-4 h-4 text-amber-400 shrink-0" aria-hidden="true" />
                 <label
                   htmlFor="directory-reminder-tone-select"
                   className="text-xs font-bold text-zinc-800 dark:text-amber-200"
                 >
-                  نغمة إشعار هذا التحدي (للتمييز بين التحديات دون فتح التطبيق):
+                  نغمة إشعار هذا التحدي:
                 </label>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                 <select
                   id="directory-reminder-tone-select"
                   value={reminderTone}
@@ -764,7 +770,7 @@ export const HundredDaysView: React.FC<HundredDaysViewProps> = ({
                     playChallengeNotificationTone(nextTone);
                   }}
                   aria-label="نغمة إشعار التحدي المختار"
-                  className="px-3 py-1.5 text-xs font-bold bg-white dark:bg-[#121318] text-amber-600 dark:text-amber-300 border border-amber-500/40 rounded-lg cursor-pointer"
+                  className="flex-1 w-full max-w-full px-3 py-1.5 text-xs font-bold bg-white dark:bg-[#121318] text-amber-600 dark:text-amber-300 border border-amber-500/40 rounded-xl cursor-pointer"
                 >
                   {CHALLENGE_NOTIFICATION_TONES.map((toneOpt) => (
                     <option key={toneOpt.id} value={toneOpt.id}>
@@ -772,20 +778,20 @@ export const HundredDaysView: React.FC<HundredDaysViewProps> = ({
                     </option>
                   ))}
                 </select>
-                <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
-                  {activeToneOption.description}
-                </span>
-              </div>
 
-              <button
-                type="button"
-                onClick={() => playChallengeNotificationTone(reminderTone)}
-                aria-label="معاينة نغمة إشعار التحدي المختار"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-600 dark:text-amber-300 border border-amber-500/40 transition-colors cursor-pointer"
-              >
-                <Volume2 className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>معاينة النغمة</span>
-              </button>
+                <button
+                  type="button"
+                  onClick={() => playChallengeNotificationTone(reminderTone)}
+                  aria-label="معاينة نغمة إشعار التحدي المختار"
+                  className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-600 dark:text-amber-300 border border-amber-500/40 transition-colors cursor-pointer shrink-0"
+                >
+                  <Volume2 className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                  <span>معاينة النغمة</span>
+                </button>
+              </div>
+              <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                {activeToneOption.description}
+              </p>
             </div>
 
             {/* Auto-Rotating Psychology Motivational Messages + Custom Override */}

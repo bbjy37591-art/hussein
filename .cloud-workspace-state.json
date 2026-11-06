@@ -1,6 +1,23 @@
 {
   "tasks": [
     {
+      "id": "task-1793971418641-ag9qc",
+      "title": "متابعة المخطط الهندسي للمشروع",
+      "notes": "",
+      "completed": false,
+      "priority": "medium",
+      "category": "work",
+      "customIcon": "briefcase",
+      "timeBlock": "morning",
+      "scheduledTime": "09:00",
+      "dueDate": "2026-11-05",
+      "estimatedMinutes": 30,
+      "actualMinutesFocused": 0,
+      "starred": false,
+      "subTasks": [],
+      "createdAt": "2026-11-06T13:23:38.641Z"
+    },
+    {
       "id": "task-1793965129027-n2cmw",
       "title": "مراجعة المخططات التنفيذية للمشروع",
       "notes": "",
@@ -539,6 +556,6 @@
     "reminderTone": "royal-chime"
   },
   "vpsEndpoint": "",
-  "updatedAt": "2026-11-06T11:38:49.055Z",
-  "deviceId": "device-1793965126555-mct8fu"
+  "updatedAt": "2026-11-06T13:23:38.667Z",
+  "deviceId": "device-1793971396337-6z0b3g"
 }

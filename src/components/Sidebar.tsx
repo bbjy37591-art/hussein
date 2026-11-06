@@ -13,6 +13,7 @@ import {
   Sun,
   Sunset,
   Sunrise,
+  X,
 } from 'lucide-react';
 import {
   Category,
@@ -32,6 +33,7 @@ interface SidebarProps {
   hundredTotalDays?: number;
   activeTab: WorkspaceTab;
   isDark: boolean;
+  onClose?: () => void;
   onUpdateFilter: (patch: Partial<TaskFilterState>) => void;
   onSelectTab: (tab: WorkspaceTab) => void;
   onToggleTheme: () => void;
@@ -44,6 +46,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   hundredTotalDays = 100,
   activeTab,
   isDark,
+  onClose,
   onUpdateFilter,
   onSelectTab,
   onToggleTheme,
@@ -58,40 +61,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: 'all',
       label: 'كافة مهام اليوم',
       count: metrics.totalCount,
-      icon: <Layers className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />,
+      icon: <Layers className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" aria-hidden="true" />,
     },
     {
       id: 'active',
       label: 'قيد التنفيذ',
       count: metrics.pendingCount,
-      icon: <Clock className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />,
+      icon: <Clock className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" aria-hidden="true" />,
     },
     {
       id: 'urgent',
       label: 'الأولويات العاجلة',
       count: metrics.urgentPendingCount,
-      icon: <Flame className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />,
+      icon: <Flame className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" aria-hidden="true" />,
     },
     {
       id: 'starred',
       label: 'المميزة بنجمة',
       count: metrics.starredCount,
-      icon: <Star className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />,
+      icon: <Star className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" aria-hidden="true" />,
     },
     {
       id: 'completed',
       label: 'المكتملة',
       count: metrics.completedCount,
-      icon: <CheckCircle2 className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />,
+      icon: <CheckCircle2 className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" aria-hidden="true" />,
     },
   ];
 
   const categories: Category[] = ['work', 'personal', 'health', 'learning'];
 
   const timeBlocks: { id: TimeBlock; icon: React.ReactNode }[] = [
-    { id: 'morning', icon: <Sunrise className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" /> },
-    { id: 'afternoon', icon: <Sun className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" /> },
-    { id: 'evening', icon: <Sunset className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" /> },
+    { id: 'morning', icon: <Sunrise className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" aria-hidden="true" /> },
+    { id: 'afternoon', icon: <Sun className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" aria-hidden="true" /> },
+    { id: 'evening', icon: <Sunset className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" aria-hidden="true" /> },
   ];
 
   const handleSelectStatus = (status: StatusFilter) => {
@@ -99,6 +102,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     if (activeTab !== 'list') {
       onSelectTab('list');
     }
+    if (onClose) onClose();
   };
 
   const handleSelectCategory = (cat: Category) => {
@@ -107,6 +111,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     if (activeTab !== 'list') {
       onSelectTab('list');
     }
+    if (onClose) onClose();
   };
 
   const handleSelectTimeBlock = (block: TimeBlock) => {
@@ -115,14 +120,41 @@ export const Sidebar: React.FC<SidebarProps> = ({
     if (activeTab !== 'list') {
       onSelectTab('list');
     }
+    if (onClose) onClose();
+  };
+
+  const handleSelectPageTab = (tab: WorkspaceTab) => {
+    onSelectTab(tab);
+    if (onClose) onClose();
   };
 
   return (
     <aside
       aria-label="القائمة الجانبية لتصنيف المهام"
-      className="order-1 w-full lg:w-[268px] shrink-0 bg-white dark:bg-[#0B0C10] border-b lg:border-b-0 lg:border-l border-zinc-200 dark:border-amber-500/20 p-4 sm:p-5 flex flex-col justify-between gap-5"
+      className="w-full shrink-0 bg-white dark:bg-[#0B0C10] p-4 sm:p-5 flex flex-col justify-between gap-5 select-none"
     >
       <div className="space-y-5">
+        {/* Mobile Drawer Header with Close Button */}
+        {onClose && (
+          <div className="flex items-center justify-between pb-3 border-b border-zinc-200 dark:border-zinc-800">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg royal-gold-btn flex items-center justify-center shrink-0">
+                <Layers className="w-4 h-4 text-zinc-950 shrink-0" aria-hidden="true" />
+              </div>
+              <h2 className="text-sm font-bold text-zinc-900 dark:text-amber-200 font-display">
+                تصنيفات وفلاتر المهام
+              </h2>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="إغلاق قائمة التصنيفات"
+              className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 bg-zinc-100 dark:bg-zinc-800/80 cursor-pointer"
+            >
+              <X className="w-4 h-4 shrink-0" aria-hidden="true" />
+            </button>
+          </div>
+        )}
         {/* Daily Completion Progress */}
         <div className="pb-4 border-b border-zinc-200 dark:border-zinc-800/80">
           <div className="flex items-baseline justify-between mb-2">
